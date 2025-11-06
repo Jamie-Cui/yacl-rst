@@ -44,7 +44,7 @@ pub fn basic_dpf_example() -> Result<()> {
     // Generate two key shares
     let (key_0, key_1) = dpf.generate_keys(&alpha, &beta, input_size, &mut rng)?;
 
-    println!("✓ Generated two key shares:");
+    println!("[OK] Generated two key shares:");
     println!(
         "  - Key 0 (Party 0): party_index={}, input_size={}",
         key_0.party_index(),
@@ -75,9 +75,9 @@ pub fn basic_dpf_example() -> Result<()> {
             share_1,
             result,
             if x == alpha {
-                "✓ (β)"
+                "[OK] (beta)"
             } else if result == 0 {
-                "✓ (0)"
+                "[OK] (0)"
             } else {
                 "?"
             }
@@ -100,8 +100,8 @@ pub fn batch_evaluation_example() -> Result<()> {
     let beta = 456u64;
     let input_size = 16;
 
-    println!("Secret point (α): {}", alpha);
-    println!("Secret value (β): {}", beta);
+    println!("Secret point (alpha): {}", alpha);
+    println!("Secret value (beta): {}", beta);
 
     // Generate keys
     let (key_0, key_1) = dpf.generate_keys(&alpha, &beta, input_size, &mut rng)?;
@@ -123,9 +123,9 @@ pub fn batch_evaluation_example() -> Result<()> {
             x,
             result,
             if x == alpha {
-                "✓"
+                "[OK]"
             } else if result == 0 {
-                "✓"
+                "[OK]"
             } else {
                 "?"
             }
@@ -224,14 +224,14 @@ pub fn yacl_dpf_example() -> Result<()> {
     let alpha = GE2n::<8>::new(42); // Secret point
     let beta = GE2n::<64>::new(100); // Secret value
 
-    println!("Secret point (α): {}", alpha.get_val());
-    println!("Secret value (β): {}", beta.get_val());
+    println!("Secret point (alpha): {}", alpha.get_val());
+    println!("Secret value (beta): {}", beta.get_val());
     println!("DPF parameters: input bits=8, output bits=64");
 
     // Generate keys
     let (key_0, key_1) = dpf.generate_keys(&alpha, &beta, 8, &mut rng)?;
 
-    println!("\n✓ Generated Yacl DPF keys:");
+    println!("\n[OK] Generated Yacl DPF keys:");
     println!(
         "  - Key 0: rank={}, control_words={}",
         key_0.get_rank(),
@@ -268,11 +268,11 @@ pub fn yacl_dpf_example() -> Result<()> {
             share_1.get_val(),
             result.get_val(),
             if should_be_beta {
-                "✓ (β)"
+                "[OK] (beta)"
             } else if should_be_zero {
-                "✓ (0)"
+                "[OK] (0)"
             } else {
-                "✗"
+                "[FAIL]"
             }
         );
     }
@@ -293,8 +293,8 @@ pub fn full_domain_evaluation_example() -> Result<()> {
     let alpha = GE2n::<4>::new(7); // Secret point
     let beta = GE2n::<64>::new(42); // Secret value
 
-    println!("Secret point (α): {}", alpha.get_val());
-    println!("Secret value (β): {}", beta.get_val());
+    println!("Secret point (alpha): {}", alpha.get_val());
+    println!("Secret value (beta): {}", beta.get_val());
     println!("Domain size: {} points", 1 << 4);
 
     // Generate evalall keys
@@ -302,7 +302,7 @@ pub fn full_domain_evaluation_example() -> Result<()> {
         dpf.generate_keys_internal(&alpha, &beta, rng.gen(), rng.gen(), true)?;
 
     println!(
-        "\n✓ Generated evalall keys with {} last correlation words",
+        "\n[OK] Generated evalall keys with {} last correlation words",
         key_0_raw.last_cw_vec.len()
     );
 
@@ -323,7 +323,7 @@ pub fn full_domain_evaluation_example() -> Result<()> {
             "x = {:2}: result = {:4} {}",
             i,
             result.get_val(),
-            if is_correct { "✓" } else { "✗" }
+            if is_correct { "[OK]" } else { "[FAIL]" }
         );
     }
 

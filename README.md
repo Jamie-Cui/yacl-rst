@@ -10,13 +10,13 @@ This implementation is based on the algorithm from the [yacl C++ library](https:
 
 ## Features
 
-- **🔐 Production-Ready DPF**: Based on the proven yacl C++ algorithm
-- **📊 Generic Support**: Configurable input/output bit sizes (1-64 bits input, 1-128 bits output)
-- **⚡ Efficient Evaluation**: Tree-based evaluation with early termination
-- **🌐 Full Domain Support**: Batch evaluation of all domain points
-- **🔒 Type-Safe API**: Comprehensive error handling and validation
-- **📦 Serialization**: Built-in support for key serialization
-- **🎯 Two Implementations**: 
+- **[PROD] Production-Ready DPF**: Based on the proven yacl C++ algorithm
+- **[GEN] Generic Support**: Configurable input/output bit sizes (1-64 bits input, 1-128 bits output)
+- **[FAST] Efficient Evaluation**: Tree-based evaluation with early termination
+- **[FULL] Full Domain Support**: Batch evaluation of all domain points
+- **[SAFE] Type-Safe API**: Comprehensive error handling and validation
+- **[SER] Serialization**: Built-in support for key serialization
+- **[TWO] Two Implementations**: 
   - `YaclDpf`: Full-featured implementation matching yacl C++
   - `XorDpf`: Simplified implementation for learning/demonstration
 
@@ -61,7 +61,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Combine shares to reveal result
     let result = dpf.combine_shares(&share_0, &share_1);
     
-    assert_eq!(result.get_val(), beta.get_val());  // ✅ Returns beta at alpha
+    assert_eq!(result.get_val(), beta.get_val());  // [OK] Returns beta at alpha
     println!("DPF evaluation successful!");
     
     Ok(())
@@ -115,18 +115,18 @@ This implementation closely follows the yacl C++ algorithm:
 
 ```
 yacl-rst/
-├── Cargo.toml              # Workspace configuration
-├── README.md               # This file
-├── CLAUDE.md               # Development guidance
-├── dpf_demo.rs             # Demo script
-└── yacl-rst/
-    └── dpf/                # DPF package
-        ├── Cargo.toml      
-        └── src/
-            ├── lib.rs      # Public API exports
-            ├── dpf.rs      # Core DPF implementation  
-            ├── error.rs    # Error types
-            └── examples.rs # Usage examples
+|-- Cargo.toml              # Workspace configuration
+|-- README.md               # This file
+|-- CLAUDE.md               # Development guidance
+|-- dpf_demo.rs             # Demo script
+`-- yacl-rst/
+    `-- dpf/                # DPF package
+        |-- Cargo.toml      
+        `-- src/
+            |-- lib.rs      # Public API exports
+            |-- dpf.rs      # Core DPF implementation  
+            |-- error.rs    # Error types
+            `-- examples.rs # Usage examples
 ```
 
 ## Development

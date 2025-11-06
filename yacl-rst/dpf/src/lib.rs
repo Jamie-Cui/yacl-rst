@@ -20,10 +20,10 @@
 //!
 //! ## Overview
 //!
-//! A DPF allows a secret point `α` and value `β` to be split between two parties such that:
-//! - Each party receives a share that reveals no information about `α` or `β`
+//! A DPF allows a secret point `alpha` and value `beta` to be split between two parties such that:
+//! - Each party receives a share that reveals no information about `alpha` or `beta`
 //! - When both parties evaluate their shares on any input `x`, they get partial results
-//! - The partial results XOR to `β` when `x = α`, and `0` otherwise
+//! - The partial results XOR to `beta` when `x = alpha`, and `0` otherwise
 //!
 //! ## Key Components
 //!
