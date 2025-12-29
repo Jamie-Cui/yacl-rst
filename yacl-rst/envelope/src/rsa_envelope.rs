@@ -283,10 +283,11 @@ impl Opener for RsaAes128GcmOpener {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rand_ext::rngs::OsRng;
 
     #[test]
     fn test_rsa_aes_envelope_seal_open() {
-        let mut rng = rand::rngs::OsRng;
+        let mut rng = OsRng;
         let (opener, sealer) = RsaAes128GcmOpener::new(&mut rng, 2048).unwrap();
 
         let plaintext = b"Hello, world! This is a longer message that needs proper encryption.";
@@ -298,7 +299,7 @@ mod tests {
 
     #[test]
     fn test_rsa_aes_envelope_serialization() {
-        let mut rng = rand::rngs::OsRng;
+        let mut rng = OsRng;
         let (opener, sealer) = RsaAes128GcmOpener::new(&mut rng, 2048).unwrap();
 
         let plaintext = b"Hello, world!";
@@ -317,7 +318,7 @@ mod tests {
 
     #[test]
     fn test_rsa_aes_envelope_wrong_key() {
-        let mut rng = rand::rngs::OsRng;
+        let mut rng = OsRng;
         let (opener, _sealer) = RsaAes128GcmOpener::new(&mut rng, 2048).unwrap();
 
         // Create another key pair
@@ -332,7 +333,7 @@ mod tests {
 
     #[test]
     fn test_rsa_aes_envelope_empty_message() {
-        let mut rng = rand::rngs::OsRng;
+        let mut rng = OsRng;
         let (opener, sealer) = RsaAes128GcmOpener::new(&mut rng, 2048).unwrap();
 
         let plaintext = b"";
@@ -344,7 +345,7 @@ mod tests {
 
     #[test]
     fn test_rsa_aes_envelope_long_message() {
-        let mut rng = rand::rngs::OsRng;
+        let mut rng = OsRng;
         let (opener, sealer) = RsaAes128GcmOpener::new(&mut rng, 2048).unwrap();
 
         let plaintext = vec![b'X'; 10000];
@@ -356,7 +357,7 @@ mod tests {
 
     #[test]
     fn test_rsa_aes_envelope_tampered_ciphertext() {
-        let mut rng = rand::rngs::OsRng;
+        let mut rng = OsRng;
         let (opener, sealer) = RsaAes128GcmOpener::new(&mut rng, 2048).unwrap();
 
         let plaintext = b"Hello, world!";

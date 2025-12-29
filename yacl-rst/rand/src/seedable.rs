@@ -14,10 +14,10 @@
 
 //! Seedable random number generator for testing
 
-use rand::Rng;
-use rand::RngCore;
-use rand::SeedableRng as RandSeedableRng;
 use rand_chacha::ChaCha20Rng as RandChaCha20Rng;
+use rand_ext::Rng;
+use rand_ext::RngCore;
+use rand_ext::SeedableRng as RandSeedableRng;
 use std::fmt;
 
 /// Trait for seedable random number generators

@@ -34,8 +34,8 @@
 //!
 //! ## Examples
 //!
-//! ```rust
-//! use yacl_math::mpint::MPInt;
+//! ```
+//! use math::mpint::MPInt;
 //!
 //! // Create large integers
 //! let a = MPInt::from_u64(12345);
@@ -51,9 +51,9 @@
 //! let result = base.pow_mod(&exp, &m).unwrap();
 //! ```
 //!
-//! ```rust
-//! use yacl_math::galois::{PrimeField, GaloisField};
-//! use yacl_math::mpint::MPInt;
+//! ```
+//! use math::galois::{PrimeField, GaloisField};
+//! use math::mpint::MPInt;
 //!
 //! // Create a prime field GF(10007)
 //! let field = PrimeField::new(MPInt::from_u64(10007));
@@ -78,7 +78,7 @@ pub use error::{MathError, Result};
 pub use gadget::{div_ceil, gcd, is_power_of_two, lcm, log2_ceil, log2_floor, round_up_to};
 pub use galois::{FieldType, GaloisField, PrimeField};
 pub use montgomery::{BaseTable, MontgomerySpace};
-pub use mpint::{PrimeType, MPInt};
+pub use mpint::{MPInt, PrimeType};
 
 /// Version information
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");

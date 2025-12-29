@@ -29,8 +29,8 @@
 //!
 //! # Example
 //!
-//! ```rust
-//! use yacl_aead::{AeadCipher, Aes128Gcm};
+//! ```
+//! use aead::{AeadCipher, Aes128Gcm};
 //!
 //! // Setup
 //! let key = [0u8; 16];  // 128-bit key
@@ -47,13 +47,13 @@
 //! assert_eq!(decrypted, plaintext);
 //! ```
 
+pub mod cipher;
 pub mod error;
 pub mod gcm;
-pub mod cipher;
 
+pub use cipher::AeadCipher;
 pub use error::{AeadError, Result};
 pub use gcm::{Aes128Gcm, Aes256Gcm};
-pub use cipher::AeadCipher;
 
 use std::fmt;
 

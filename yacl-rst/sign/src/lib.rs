@@ -24,8 +24,8 @@
 //!
 //! # Example
 //!
-//! ```rust
-//! use yacl_sign::{Signer, Verifier, RsaSha256Signer};
+//! ```
+//! use sign::{Signer, Verifier, RsaSha256Signer};
 //!
 //! // Setup - generate key pair
 //! let mut rng = rand::rngs::OsRng;
@@ -40,14 +40,14 @@
 //! assert!(verifier.verify(message, &signature).is_ok());
 //! ```
 
+pub mod ed25519;
 pub mod error;
 pub mod rsa;
-pub mod ed25519;
 pub mod traits;
 
-pub use error::{SignError, Result};
-pub use rsa::{RsaSha256Signer, RsaSha256Verifier, RsaPublicKey, RsaPrivateKey};
-pub use ed25519::{Ed25519Signer, Ed25519Verifier, Ed25519PublicKey, Ed25519PrivateKey};
+pub use ed25519::{Ed25519PrivateKey, Ed25519PublicKey, Ed25519Signer, Ed25519Verifier};
+pub use error::{Result, SignError};
+pub use rsa::{RsaPrivateKey, RsaPublicKey, RsaSha256Signer, RsaSha256Verifier};
 pub use traits::{Signer, Verifier};
 
 use std::fmt;
@@ -80,8 +80,14 @@ mod tests {
 
     #[test]
     fn test_signature_scheme_display() {
-        assert_eq!(format!("{}", SignatureScheme::RsaPkcs1v15Sha256), "RSA-PKCS1v15-SHA256");
-        assert_eq!(format!("{}", SignatureScheme::RsaPssSha256), "RSA-PSS-SHA256");
+        assert_eq!(
+            format!("{}", SignatureScheme::RsaPkcs1v15Sha256),
+            "RSA-PKCS1v15-SHA256"
+        );
+        assert_eq!(
+            format!("{}", SignatureScheme::RsaPssSha256),
+            "RSA-PSS-SHA256"
+        );
         assert_eq!(format!("{}", SignatureScheme::Ed25519), "Ed25519");
     }
 }

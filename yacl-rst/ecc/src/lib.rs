@@ -23,8 +23,8 @@
 //!
 //! # Example
 //!
-//! ```rust
-//! use yacl_ecc::{EcGroup, Point, Scalar, P256};
+//! ```
+//! use ecc::{EcGroup, Point, Scalar, P256};
 //!
 //! // Create a curve instance
 //! let curve = P256::new();
@@ -39,15 +39,15 @@
 //! let point = curve.mul(&g, &scalar);
 //! ```
 
+pub mod curve;
 pub mod error;
 pub mod point;
 pub mod scalar;
-pub mod curve;
 
+pub use curve::{CurveType, EcGroup, Secp256k1, P256};
 pub use error::{EcError, Result};
-pub use point::{Point, AffinePoint};
+pub use point::{AffinePoint, Point};
 pub use scalar::Scalar;
-pub use curve::{EcGroup, P256, Secp256k1, CurveType};
 
 use std::fmt;
 

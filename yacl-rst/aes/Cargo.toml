@@ -20,7 +20,7 @@ description = "AES symmetric encryption - Rust port of yacl AES module"
 license = "Apache-2.0"
 
 [dependencies]
-aes = "0.8"
+aes_ext = { package = "aes", version = "0.8" }
 cipher = "0.4"
 ctr = "0.9"
 cbc = "0.1"

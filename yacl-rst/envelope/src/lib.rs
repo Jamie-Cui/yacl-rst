@@ -18,11 +18,12 @@
 //!
 //! # Example
 //!
-//! ```rust
-//! use yacl_envelope::{Sealer, Opener, RsaAes128GcmSealer, RsaAes128GcmOpener};
+//! ```
+//! use envelope::{Sealer, Opener, RsaAes128GcmSealer, RsaAes128GcmOpener};
+//! use rand_ext::rngs::OsRng;
 //!
 //! // Setup - generate key pair
-//! let mut rng = rand::rngs::OsRng;
+//! let mut rng = OsRng;
 //! let (opener, sealer) = RsaAes128GcmOpener::new(&mut rng, 2048).unwrap();
 //!
 //! // Seal the message
@@ -38,4 +39,4 @@ pub mod error;
 pub mod rsa_envelope;
 
 pub use error::{EnvelopeError, Result};
-pub use rsa_envelope::{RsaAes128GcmSealer, RsaAes128GcmOpener, SealedMessage, Sealer, Opener};
+pub use rsa_envelope::{Opener, RsaAes128GcmOpener, RsaAes128GcmSealer, SealedMessage, Sealer};

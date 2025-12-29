@@ -21,7 +21,7 @@ license = "Apache-2.0"
 
 [dependencies]
 hash = { path = "../hash" }
-hmac = "0.12"
+hmac_ext = { package = "hmac", version = "0.12" }
 sha2 = "0.10"
 blake3 = "1.5"
 serde = { version = "1.0", features = ["derive"], optional = true }

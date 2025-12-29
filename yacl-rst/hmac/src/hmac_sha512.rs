@@ -15,7 +15,7 @@
 //! HMAC-SHA512 implementation
 
 use crate::{Hmac, HmacAlgorithm};
-use hmac::{Hmac as HmacImpl, Mac};
+use hmac_ext::{Hmac as HmacImpl, Mac};
 use sha2::Sha512;
 use std::fmt;
 
@@ -52,7 +52,8 @@ impl HmacSha512 {
     /// Computes the HMAC of a single piece of data
     pub fn hmac(key: &[u8], data: &[u8]) -> Vec<u8> {
         type HmacSha512Inner = HmacImpl<Sha512>;
-        let mut mac = HmacSha512Inner::new_from_slice(key).expect("HMAC can accept keys of any size");
+        let mut mac =
+            HmacSha512Inner::new_from_slice(key).expect("HMAC can accept keys of any size");
         mac.update(data);
         mac.finalize().into_bytes().to_vec()
     }

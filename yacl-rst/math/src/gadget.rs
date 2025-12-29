@@ -36,7 +36,7 @@
 /// # Examples
 ///
 /// ```
-/// use yacl_math::gadget::log2_floor;
+/// use math::gadget::log2_floor;
 ///
 /// assert_eq!(log2_floor(1), 0);   // 2^0 = 1
 /// assert_eq!(log2_floor(2), 1);   // 2^1 = 2
@@ -73,7 +73,7 @@ pub const fn log2_floor(x: u64) -> u64 {
 /// # Examples
 ///
 /// ```
-/// use yacl_math::gadget::log2_ceil;
+/// use math::gadget::log2_ceil;
 ///
 /// assert_eq!(log2_ceil(1), 0);   // 1 <= 2^0
 /// assert_eq!(log2_ceil(2), 1);   // 2 <= 2^1
@@ -115,7 +115,7 @@ pub const fn log2_ceil(x: u64) -> u64 {
 /// # Examples
 ///
 /// ```
-/// use yacl_math::gadget::div_ceil;
+/// use math::gadget::div_ceil;
 ///
 /// assert_eq!(div_ceil(0, 5), 0);
 /// assert_eq!(div_ceil(5, 5), 1);
@@ -155,7 +155,7 @@ pub const fn div_ceil(x: u64, y: u64) -> u64 {
 /// # Examples
 ///
 /// ```
-/// use yacl_math::gadget::round_up_to;
+/// use math::gadget::round_up_to;
 ///
 /// assert_eq!(round_up_to(0, 8), 0);
 /// assert_eq!(round_up_to(1, 8), 8);
@@ -184,7 +184,7 @@ pub const fn round_up_to(x: u64, y: u64) -> u64 {
 /// # Examples
 ///
 /// ```
-/// use yacl_math::gadget::is_power_of_two;
+/// use math::gadget::is_power_of_two;
 ///
 /// assert!(!is_power_of_two(0));
 /// assert!(is_power_of_two(1));
@@ -209,7 +209,7 @@ pub const fn is_power_of_two(x: u64) -> bool {
 /// # Examples
 ///
 /// ```
-/// use yacl_math::gadget::gcd;
+/// use math::gadget::gcd;
 ///
 /// assert_eq!(gcd(48, 18), 6);
 /// assert_eq!(gcd(17, 5), 1);
@@ -231,7 +231,7 @@ where
 /// # Examples
 ///
 /// ```
-/// use yacl_math::gadget::lcm;
+/// use math::gadget::lcm;
 ///
 /// assert_eq!(lcm(4, 6), 12);
 /// assert_eq!(lcm(5, 7), 35);

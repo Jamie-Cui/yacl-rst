@@ -36,8 +36,8 @@
 //!
 //! # Example
 //!
-//! ```rust
-//! use yacl_oprf::{OprfClient, OprfServer, OprfConfig};
+//! ```
+//! use oprf::{OprfClient, OprfServer, OprfConfig};
 //!
 //! let config = OprfConfig::default_config();
 //! let mut client = OprfClient::new(&config).unwrap();
@@ -49,14 +49,14 @@
 //! let output = client.finalize(&evaluated, None).unwrap();
 //! ```
 
-pub mod error;
-pub mod config;
 pub mod client;
+pub mod config;
+pub mod error;
 pub mod server;
 
-pub use error::{OprfError, Result};
-pub use config::{OprfConfig, OprfCtx, OprfMode, OprfCipherSuite};
 pub use client::OprfClient;
+pub use config::{OprfCipherSuite, OprfConfig, OprfCtx, OprfMode};
+pub use error::{OprfError, Result};
 pub use server::OprfServer;
 
 #[cfg(test)]

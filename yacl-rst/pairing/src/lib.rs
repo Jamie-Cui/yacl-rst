@@ -24,8 +24,8 @@
 //!
 //! # Example
 //!
-//! ```rust
-//! use yacl_pairing::{PairingGroup, BN254Pairing};
+//! ```
+//! use pairing::{PairingGroup, BN254Pairing};
 //!
 //! let pairing = BN254Pairing::new();
 //! let g1 = pairing.group1().generator();
@@ -36,12 +36,12 @@
 //! ```
 
 pub mod error;
-pub mod types;
 pub mod pairing;
+pub mod types;
 
 pub use error::{PairingError, Result};
-pub use types::{PairingCurve, PairingAlgorithm, GTElement};
-pub use pairing::{PairingGroup, BN254Pairing};
+pub use pairing::{BN254Pairing, PairingGroup};
+pub use types::{GTElement, PairingAlgorithm, PairingCurve};
 
 #[cfg(test)]
 mod tests {

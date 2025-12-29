@@ -14,10 +14,10 @@
 
 //! Core random number generation functions
 
-use rand::Rng;
-use rand::RngCore;
-use rand::SeedableRng;
 use rand_chacha::ChaCha20Rng as RandChaCha20Rng;
+use rand_ext::Rng;
+use rand_ext::RngCore;
+use rand_ext::SeedableRng;
 use std::cell::RefCell;
 
 /// Thread-local RNG instance
@@ -34,7 +34,7 @@ thread_local! {
 /// # Example
 ///
 /// ```
-/// use yacl_rand::fill_random;
+/// use rand::fill_random;
 ///
 /// let mut buf = [0u8; 32];
 /// fill_random(&mut buf);
@@ -57,7 +57,7 @@ pub fn fill_random(buf: &mut [u8]) {
 /// # Example
 ///
 /// ```
-/// use yacl_rand::random_bytes;
+/// use rand::random_bytes;
 ///
 /// let bytes = random_bytes(32);
 /// assert_eq!(bytes.len(), 32);

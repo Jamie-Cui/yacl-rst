@@ -15,7 +15,7 @@
 //! HMAC-SHA384 implementation
 
 use crate::{Hmac, HmacAlgorithm};
-use hmac::{Hmac as HmacImpl, Mac};
+use hmac_ext::{Hmac as HmacImpl, Mac};
 use sha2::Sha384;
 use std::fmt;
 
@@ -52,7 +52,8 @@ impl HmacSha384 {
     /// Computes the HMAC of a single piece of data
     pub fn hmac(key: &[u8], data: &[u8]) -> Vec<u8> {
         type HmacSha384Inner = HmacImpl<Sha384>;
-        let mut mac = HmacSha384Inner::new_from_slice(key).expect("HMAC can accept keys of any size");
+        let mut mac =
+            HmacSha384Inner::new_from_slice(key).expect("HMAC can accept keys of any size");
         mac.update(data);
         mac.finalize().into_bytes().to_vec()
     }

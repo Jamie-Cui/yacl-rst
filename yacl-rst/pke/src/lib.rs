@@ -22,8 +22,8 @@
 //!
 //! # Example
 //!
-//! ```rust
-//! use yacl_pke::{Encryptor, Decryptor, RsaOaepEncryptor, RsaOaepDecryptor};
+//! ```
+//! use pke::{Encryptor, Decryptor, RsaOaepEncryptor, RsaOaepDecryptor};
 //!
 //! // Setup - generate key pair
 //! let mut rng = rand::rngs::OsRng;
@@ -43,8 +43,8 @@ pub mod rsa;
 pub mod traits;
 
 pub use error::{PkeError, Result};
-pub use rsa::{RsaOaepEncryptor, RsaOaepDecryptor, RsaPublicKey, RsaPrivateKey};
-pub use traits::{Encryptor, Decryptor};
+pub use rsa::{RsaOaepDecryptor, RsaOaepEncryptor, RsaPrivateKey, RsaPublicKey};
+pub use traits::{Decryptor, Encryptor};
 
 use std::fmt;
 
