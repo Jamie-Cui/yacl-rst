@@ -12,20 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-[workspace]
-members = [
-  "yacl-rst/dpf",
-  "yacl-rst/math",
-  "yacl-rst/hash",
-  "yacl-rst/hmac",
-  "yacl-rst/rand",
-  "yacl-rst/aes",
-  "yacl-rst/aead",
-  "yacl-rst/sign",
-  "yacl-rst/pke",
-  "yacl-rst/envelope",
-  "yacl-rst/ecc",
-  "yacl-rst/oprf",
-  "yacl-rst/pairing",
-]
-resolver = "2"
+[package]
+name = "hmac"
+version = "0.1.0"
+edition = "2021"
+description = "HMAC implementations - Rust port of yacl hmac module"
+license = "Apache-2.0"
+
+[dependencies]
+hash = { path = "../hash" }
+hmac = "0.12"
+sha2 = "0.10"
+blake3 = "1.5"
+serde = { version = "1.0", features = ["derive"], optional = true }
+
+[features]
+default = ["serde"]
+serde = ["dep:serde"]
+
+[dev-dependencies]
+hex = "0.4"

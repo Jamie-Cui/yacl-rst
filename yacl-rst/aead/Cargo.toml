@@ -12,20 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-[workspace]
-members = [
-  "yacl-rst/dpf",
-  "yacl-rst/math",
-  "yacl-rst/hash",
-  "yacl-rst/hmac",
-  "yacl-rst/rand",
-  "yacl-rst/aes",
-  "yacl-rst/aead",
-  "yacl-rst/sign",
-  "yacl-rst/pke",
-  "yacl-rst/envelope",
-  "yacl-rst/ecc",
-  "yacl-rst/oprf",
-  "yacl-rst/pairing",
-]
-resolver = "2"
+[package]
+name = "aead"
+version = "0.1.0"
+edition = "2021"
+description = "AEAD (Authenticated Encryption with Associated Data) - Rust port of yacl AEAD module"
+license = "Apache-2.0"
+
+[dependencies]
+aes = "0.8"
+aes-gcm = "0.10"
+aes-gcm-siv = "0.11"
+ctr = "0.9"
+ghash = "0.5"
+cipher = { version = "0.4", features = ["block-padding"] }
+serde = { version = "1.0", features = ["derive"], optional = true }
+rand = { path = "../rand", optional = true }
+
+[features]
+default = ["serde"]
+serde = ["dep:serde"]
+
+[dev-dependencies]
+hex = "0.4"
