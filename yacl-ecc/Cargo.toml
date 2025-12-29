@@ -12,20 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-[workspace]
-members = [
-  "yacl-rst/dpf",
-  "yacl-math",
-  "yacl-hash",
-  "yacl-hmac",
-  "yacl-rand",
-  "yacl-aes",
-  "yacl-aead",
-  "yacl-sign",
-  "yacl-pke",
-  "yacl-envelope",
-  "yacl-ecc",
-  "yacl-oprf",
-  "yacl-pairing",
-]
-resolver = "2"
+[package]
+name = "yacl-ecc"
+version = "0.1.0"
+edition = "2021"
+description = "Elliptic curve cryptography - Rust port of yacl ecc module"
+license = "Apache-2.0"
+
+[dependencies]
+p256 = { version = "0.13", features = ["ecdsa"] }
+k256 = { version = "0.13", features = ["ecdsa"] }
+rand = "0.8"
+serde = { version = "1.0", features = ["derive"], optional = true }
+
+[features]
+default = ["serde"]
+serde = ["dep:serde"]

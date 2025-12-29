@@ -12,20 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-[workspace]
-members = [
-  "yacl-rst/dpf",
-  "yacl-math",
-  "yacl-hash",
-  "yacl-hmac",
-  "yacl-rand",
-  "yacl-aes",
-  "yacl-aead",
-  "yacl-sign",
-  "yacl-pke",
-  "yacl-envelope",
-  "yacl-ecc",
-  "yacl-oprf",
-  "yacl-pairing",
-]
-resolver = "2"
+[package]
+name = "yacl-math"
+version = "0.1.0"
+edition = "2021"
+description = "Cryptographic math utilities - Rust port of yacl math module"
+license = "Apache-2.0"
+
+[dependencies]
+num-bigint = "0.4"
+num-traits = "0.2"
+num-integer = "0.1"
+rand = "0.8"
+serde = { version = "1.0", features = ["derive"], optional = true }
+thiserror = "2.0"
+
+[features]
+default = ["serde"]
+serde = ["dep:serde", "num-bigint/serde"]
+
+[dev-dependencies]
+rand_chacha = "0.3"
