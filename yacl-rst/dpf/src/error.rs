@@ -20,26 +20,23 @@ use std::fmt;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Error {
     /// Invalid input length for DPF operations
-    InvalidInputLength {
-        expected: usize,
-        actual: usize,
-    },
-    
+    InvalidInputLength { expected: usize, actual: usize },
+
     /// Key generation failed
     KeyGenerationFailed(String),
-    
+
     /// Evaluation failed
     EvaluationFailed(String),
-    
+
     /// Invalid key format or corrupted key
     InvalidKey(String),
-    
+
     /// Cryptographic operation failed
     CryptographicError(String),
-    
+
     /// Serialization/deserialization error
     SerializationError(String),
-    
+
     /// Invalid parameters provided
     InvalidParameters(String),
 }
@@ -48,7 +45,11 @@ impl fmt::Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Error::InvalidInputLength { expected, actual } => {
-                write!(f, "Invalid input length: expected {}, got {}", expected, actual)
+                write!(
+                    f,
+                    "Invalid input length: expected {}, got {}",
+                    expected, actual
+                )
             }
             Error::KeyGenerationFailed(msg) => {
                 write!(f, "Key generation failed: {}", msg)

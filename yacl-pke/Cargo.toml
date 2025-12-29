@@ -12,20 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-[workspace]
-members = [
-  "yacl-rst/dpf",
-  "yacl-math",
-  "yacl-hash",
-  "yacl-hmac",
-  "yacl-rand",
-  "yacl-aes",
-  "yacl-aead",
-  "yacl-sign",
-  "yacl-pke",
-  "yacl-envelope",
-  "yacl-ecc",
-  "yacl-oprf",
-  "yacl-pairing",
-]
-resolver = "2"
+[package]
+name = "yacl-pke"
+version = "0.1.0"
+edition = "2021"
+description = "Public key encryption - Rust port of yacl pke module"
+license = "Apache-2.0"
+
+[dependencies]
+rsa = "0.9"
+sha2 = "0.10"
+rand = "0.8"
+serde = { version = "1.0", features = ["derive"], optional = true }
+yacl-rand = { path = "../yacl-rand" }
+
+[features]
+default = ["serde"]
+serde = ["dep:serde"]

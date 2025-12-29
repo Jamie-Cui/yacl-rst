@@ -13,20 +13,20 @@
 // limitations under the License.
 
 //! # Distributed Point Function (DPF) Implementation
-//! 
+//!
 //! This crate provides a comprehensive implementation of Distributed Point Functions (DPF),
 //! which are cryptographic primitives that allow two parties to securely evaluate a function
 //! where only one party knows the input point and the other party knows the function value.
-//! 
+//!
 //! ## Overview
-//! 
-//! A DPF allows a secret point `α` and value `β` to be split between two parties such that:
-//! - Each party receives a share that reveals no information about `α` or `β`
+//!
+//! A DPF allows a secret point `alpha` and value `beta` to be split between two parties such that:
+//! - Each party receives a share that reveals no information about `alpha` or `beta`
 //! - When both parties evaluate their shares on any input `x`, they get partial results
-//! - The partial results XOR to `β` when `x = α`, and `0` otherwise
-//! 
+//! - The partial results XOR to `beta` when `x = alpha`, and `0` otherwise
+//!
 //! ## Key Components
-//! 
+//!
 //! - [`Dpf`] - Core trait defining the DPF interface
 //! - [`DpfKey`] - Represents a secret key share for DPF evaluation
 //! - [`Cw`] - Control word used in the evaluation process
@@ -39,5 +39,8 @@ pub mod error;
 #[cfg(any(feature = "examples", test))]
 pub mod examples;
 
-pub use dpf::{Dpf, DpfKey, Cw, XorDpf, XorDpfKey};
+pub use dpf::{
+    get_terminate_level, split_dpf_seed, ControlWord, Cw, Dpf, DpfKey, DpfKeyImpl, DpfPrg, GE2n,
+    XorDpf, XorDpfKey, YaclDpf,
+};
 pub use error::Error;

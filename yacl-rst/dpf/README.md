@@ -4,11 +4,11 @@ A comprehensive Rust implementation of Distributed Point Functions (DPF), which 
 
 ## Overview
 
-A DPF allows a secret point `α` and value `β` to be split between two parties such that:
+A DPF allows a secret point `alpha` and value `beta` to be split between two parties such that:
 
-- Each party receives a share that reveals no information about `α` or `β`
+- Each party receives a share that reveals no information about `alpha` or `beta`
 - When both parties evaluate their shares on any input `x`, they get partial results
-- The partial results combine to `β` when `x = α`, and `0` otherwise
+- The partial results combine to `beta` when `x = alpha`, and `0` otherwise
 
 ## Features
 
@@ -38,9 +38,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let dpf = XorDpf::default();
     let mut rng = rand::thread_rng();
     
-    // Define the secret point (α) and value (β)
-    let alpha = 42u64;  // Secret point where function outputs β
-    let beta = 100u64;  // Value to output at point α
+    // Define the secret point (alpha) and value (beta)
+    let alpha = 42u64;  // Secret point where function outputs beta
+    let beta = 100u64;  // Value to output at point alpha
     let input_size = 16;  // Input domain size in bits
     
     // Generate two key shares
@@ -60,7 +60,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         
         println!("x = {}: result = {} {}", 
                  x, result, 
-                 if x == alpha { "(β)" } else if result == 0 { "(0)" } else { "" });
+                 if x == alpha { "(beta)" } else if result == 0 { "(0)" } else { "" });
     }
     
     Ok(())
