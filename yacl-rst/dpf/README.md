@@ -26,42 +26,56 @@ Add this to your `Cargo.toml`:
 ```toml
 [dependencies]
 dpf = "1.0.0"
+rand = "0.8"
 ```
+
+## Examples
+
+The crate includes a comprehensive demo showing DPF functionality:
+
+```bash
+# Run the DPF demo
+cargo run -p dpf --example dpf_demo
+```
+
+The demo demonstrates:
+- Key generation for secret points and values
+- Evaluation at secret and non-secret points
+- Full domain evaluation
+- Share combination to recover the secret value
 
 ## Basic Usage
 
 ```rust
-use dpf::{XorDpf, Dpf};
+use dpf::{YaclDpf, Dpf, GE2n};
+use rand::thread_rng;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Create a DPF instance
-    let dpf = XorDpf::default();
-    let mut rng = rand::thread_rng();
+    // Create a DPF instance with 16-bit input and 64-bit output
+    let dpf = YaclDpf::<16, 64>::new();
+    let mut rng = thread_rng();
     
     // Define the secret point (alpha) and value (beta)
-    let alpha = 42u64;  // Secret point where function outputs beta
-    let beta = 100u64;  // Value to output at point alpha
-    let input_size = 16;  // Input domain size in bits
+    let alpha = GE2n::<16>::new(12345);  // Secret point
+    let beta = GE2n::<64>::new(98765);   // Secret value
     
     // Generate two key shares
-    let (key_0, key_1) = dpf.generate_keys(&alpha, &beta, input_size, &mut rng)?;
+    let (key_0, key_1) = dpf.generate_keys(&alpha, &beta, 16, &mut rng)?;
     
-    // Distribute keys to two parties (they must remain secret!)
+    // Evaluate at the secret point
+    let share_0 = dpf.evaluate(&key_0, &alpha)?;
+    let share_1 = dpf.evaluate(&key_1, &alpha)?;
+    let result = dpf.combine_shares(&share_0, &share_1);
     
-    // Each party evaluates their key independently
-    let test_points = vec![0u64, 42u64, 100u64];
+    assert_eq!(result.get_val(), beta.get_val());
     
-    for &x in &test_points {
-        let share_0 = dpf.evaluate(&key_0, &x)?;
-        let share_1 = dpf.evaluate(&key_1, &x)?;
-        
-        // Combine shares to get final result
-        let result = dpf.combine_shares(&share_0, &share_1);
-        
-        println!("x = {}: result = {} {}", 
-                 x, result, 
-                 if x == alpha { "(beta)" } else if result == 0 { "(0)" } else { "" });
-    }
+    // Evaluate at other points (should return 0)
+    let other_point = GE2n::<16>::new(100);
+    let share_0 = dpf.evaluate(&key_0, &other_point)?;
+    let share_1 = dpf.evaluate(&key_1, &other_point)?;
+    let result = dpf.combine_shares(&share_0, &share_1);
+    
+    assert_eq!(result.get_val(), 0);
     
     Ok(())
 }
@@ -76,10 +90,10 @@ The main trait defining the DPF interface:
 
 ```rust
 pub trait Dpf {
-    type Key: DpfKeyShare;
-    type Input: Clone + PartialEq + Eq;
-    type Output: Clone + PartialEq + Eq;
-    
+    type Key: DpfKey;
+    type Input: Clone;
+    type Output: Clone;
+
     fn generate_keys<R: Rng + CryptoRng>(
         &self,
         alpha: &Self::Input,
@@ -87,94 +101,75 @@ pub trait Dpf {
         input_size: usize,
         rng: &mut R,
     ) -> Result<(Self::Key, Self::Key)>;
-    
+
     fn evaluate(&self, key: &Self::Key, x: &Self::Input) -> Result<Self::Output>;
-    fn batch_evaluate(&self, key: &Self::Key, inputs: &[Self::Input]) -> Result<Vec<Self::Output>>;
     fn combine_shares(&self, share_0: &Self::Output, share_1: &Self::Output) -> Self::Output;
 }
 ```
 
-#### `DpfKeyShare` Trait
-Trait for DPF key shares with serialization support:
+#### `YaclDpf<M, N>` Implementation
+A production-ready DPF implementation based on the yacl algorithm:
 
-```rust
-pub trait DpfKeyShare: Clone + Send + Sync + Serialize + for<'de> Deserialize<'de> {
-    fn party_index(&self) -> usize;
-    fn input_size(&self) -> usize;
-    fn validate(&self) -> Result<()>;
-}
-```
+- Generic over input bit width `M` and output bit width `N`
+- Uses cryptographic PRG for secure key generation
+- Supports full domain evaluation with `eval_all()`
+- Efficient batch evaluation capabilities
+- Configurable input/output sizes
 
 #### `XorDpf` Implementation
-A simple XOR-based DPF implementation for demonstration purposes:
+A simplified XOR-based DPF implementation for testing:
 
 - Uses additive secret sharing
 - Supports 64-bit inputs and outputs
-- Configurable input domain size
-- Deterministic behavior for testing
+- Useful for testing and understanding DPF concepts
 
 ### Key Types
 
-- **`DpfKey<K>`**: Generic wrapper for DPF keys
-- **`XorDpfKey`**: Concrete implementation of XOR DPF keys
-- **`Cw`**: Control word used in DPF evaluation (extensible for future implementations)
+- **`DpfKey`**: Trait representing DPF key shares
+- **`DpfKeyImpl`**: Concrete implementation of DPF keys with control words
+- **`Cw` (Control Word)**: Used in the DPF evaluation process
+- **`GE2n<N>`**: Represents Galois Extension field elements with N-bit values
 
 ## Advanced Usage
 
-### Batch Evaluation
+### Full Domain Evaluation
 
-Efficiently evaluate multiple points at once:
-
-```rust
-let test_points: Vec<u64> = (0..100).step_by(5).collect();
-let shares_0 = dpf.batch_evaluate(&key_0, &test_points)?;
-let shares_1 = dpf.batch_evaluate(&key_1, &test_points)?;
-
-let results: Vec<u64> = shares_0.iter()
-    .zip(shares_1.iter())
-    .map(|(s0, s1)| dpf.combine_shares(s0, s1))
-    .collect();
-```
-
-### Key Serialization
-
-DPF keys support serialization for storage and transmission:
+Evaluate the DPF at all points in the domain:
 
 ```rust
-use serde_json;
+use dpf::{YaclDpf, Dpf, GE2n};
 
-// Serialize a key
-let serialized = serde_json::to_string(&key_0)?;
+// Create a small DPF for demonstration
+let dpf = YaclDpf::<4, 64>::new();
+let alpha = GE2n::<4>::new(5);
+let beta = GE2n::<64>::new(42);
 
-// Deserialize a key
-let deserialized_key: XorDpfKey = serde_json::from_str(&serialized)?;
-```
+let (key_0, key_1) = dpf.generate_keys(&alpha, &beta, 4, &mut rng)?;
 
-### Custom DPF Implementations
+// Evaluate at all domain points
+let shares_0 = dpf.eval_all(&key_0)?;
+let shares_1 = dpf.eval_all(&key_1)?;
 
-Implement the `Dpf` trait for custom DPF schemes:
-
-```rust
-#[derive(Debug, Clone)]
-pub struct MyCustomDpf { /* custom fields */ }
-
-impl Dpf for MyCustomDpf {
-    type Key = MyCustomKey;
-    type Input = u64;
-    type Output = u64;
-    
-    fn generate_keys<R: Rng + CryptoRng>(
-        &self,
-        alpha: &Self::Input,
-        beta: &Self::Output,
-        input_size: usize,
-        rng: &mut R,
-    ) -> Result<(Self::Key, Self::Key)> {
-        // Your implementation here
-    }
-    
-    // ... implement other required methods
+// Combine shares
+for (i, (s0, s1)) in shares_0.iter().zip(shares_1.iter()).enumerate() {
+    let result = dpf.combine_shares(s0, s1);
+    println!("Point {}: {}", i, result.get_val());
 }
+```
+
+### Configurable Bit Widths
+
+The `YaclDpf` implementation is generic over input and output bit widths:
+
+```rust
+// 8-bit input, 32-bit output
+let dpf_small = YaclDpf::<8, 32>::new();
+
+// 16-bit input, 64-bit output (common configuration)
+let dpf_medium = YaclDpf::<16, 64>::new();
+
+// 32-bit input, 128-bit output (large domains)
+let dpf_large = YaclDpf::<32, 128>::new();
 ```
 
 ## Error Handling
@@ -198,45 +193,58 @@ match dpf.generate_keys(&alpha, &beta, input_size, &mut rng) {
 
 ## Security Considerations
 
-### Current Implementation
+### Implementation
 
-The `XorDpf` implementation is simplified for demonstration purposes:
+This crate provides two DPF implementations:
 
-- **NOT** suitable for production cryptographic use
-- Uses additive sharing instead of proper DPF construction
-- Provides correct functionality but lacks security guarantees
+1. **`YaclDpf`** - Production-ready implementation based on the yacl algorithm:
+   - Uses cryptographic PRG (ChaCha20) for secure key generation
+   - Suitable for production use with proper security parameters
+   - Implements standard DPF constructions
 
-### Production Considerations
+2. **`XorDpf`** - Simplified implementation for testing:
+   - Uses basic additive secret sharing
+   - Useful for understanding DPF concepts and testing
+   - Not recommended for production cryptographic use
 
-For production DPF implementations, consider:
+### Best Practices
 
-- Proper cryptographic pseudorandom generators
-- Secure key generation and distribution
-- Side-channel attack resistance
-- Formal security proofs
-- Compliance with relevant standards
+When using DPF in production:
+- Ensure secure key distribution channels
+- Use appropriate bit widths for your security requirements
+- Validate keys before use with the `validate()` method
+- Keep key shares secret and separate
+- Consider side-channel attack resistance in your implementation
 
 ## Performance
 
-The current implementation is optimized for clarity rather than performance:
+Performance characteristics of the `YaclDpf` implementation:
 
-- Basic additive sharing: O(1) operations
-- Batch evaluation: O(n) where n is the number of inputs
-- Key generation: O(1) with random number generation
-- Memory usage: O(1) per key
+- **Key Generation**: O(n) where n is the input size in bits
+- **Evaluation**: O(n) per point evaluation
+- **Full Domain Evaluation**: O(n·2^n) for n-bit inputs
+- **Memory Usage**: O(n) per key
+
+The implementation balances security and performance for practical use cases.
 
 ## Testing
 
 Run the test suite:
 
 ```bash
-cargo test
+cargo test -p dpf
 ```
 
-Run examples:
+Run tests with output:
 
 ```bash
-cargo test --features examples
+cargo test -p dpf -- --nocapture
+```
+
+Run the example demo:
+
+```bash
+cargo run -p dpf --example dpf_demo
 ```
 
 ## Contributing
